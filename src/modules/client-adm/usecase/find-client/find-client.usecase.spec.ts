@@ -5,10 +5,17 @@ import FindClientUseCase from "./find-client.usecase";
 
 const client = new Client({
   id: new Id("1"),
-  name: "Client 1",
-  email: "client@123.com",
+  name: "Lucian",
+  email: "lucian@123.com",
   document: "1234-5678",
-  address: "Street 1",
+  address: new Address(
+    "Rua 123",
+    "99",
+    "Casa Verde",
+    "Criciúma",
+    "SC",
+    "88888-888"
+  ),
 });
 
 const MockRepository = () => {

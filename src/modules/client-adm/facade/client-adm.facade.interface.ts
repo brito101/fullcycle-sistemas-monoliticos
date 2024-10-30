@@ -5,7 +5,7 @@ export interface AddClientFacadeInputDto {
   name: string;
   email: string;
   document: string;
-  address: string;
+  address: Address;
 }
 
 export interface FindClientFacadeInputDto {
@@ -17,7 +17,7 @@ export interface FindClientFacadeOutputDto {
   name: string;
   email: string;
   document: string;
-  address: string;
+  address: Address;
   createdAt: Date;
   updatedAt: Date;
 }

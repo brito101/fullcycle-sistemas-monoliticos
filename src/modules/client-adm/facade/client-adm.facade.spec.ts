@@ -3,8 +3,8 @@ import { ClientModel } from "../repository/client.model";
 import ClientRepository from "../repository/client.repository";
 import AddClientUseCase from "../usecase/add-client/add-client.usecase";
 import ClientAdmFacade from "./client-adm.facade";
-import FindClientUseCase from "../usecase/find-client/find-client.usecase";
 import ClientAdmFacadeFactory from "../factory/client-adm.facade.factory";
+import Address from "../../@shared/domain/value-object/address";
 
 describe("Client Adm Facade test", () => {
   let sequelize: Sequelize;
@@ -26,14 +26,26 @@ describe("Client Adm Facade test", () => {
   });
 
   it("should create a client", async () => {
-    const facade = ClientAdmFacadeFactory.create();
+    const repository = new ClientRepository();
+    const addUsecase = new AddClientUseCase(repository);
+    const facade = new ClientAdmFacade({
+      addUsecase: addUsecase,
+      findUsecase: undefined,
+    });
 
     const input = {
       id: "1",
-      name: "Client 1",
-      email: "client@xpto.com",
+      name: "Lucian",
+      email: "lucian@xpto.com",
       document: "1234-5678",
-      address: "Street 1",
+      address: new Address(
+        "Rua 123",
+        "99",
+        "Casa Verde",
+        "Criciúma",
+        "SC",
+        "88888-888"
+      ),
     };
 
     await facade.add(input);
@@ -45,18 +57,33 @@ describe("Client Adm Facade test", () => {
     expect(client.name).toBe(input.name);
     expect(client.email).toBe(input.email);
     expect(client.document).toBe(input.document);
-    expect(client.address).toBe(input.address);
+    expect(client.street).toBe(input.address.street);
   });
 
   it("should find a client", async () => {
+    // const repository = new ClientRepository()
+    // const addUsecase = new AddClientUseCase(repository)
+    // const findUseCase = new FindClientUseCase(repository)
+    // const facade = new ClientAdmFacade({
+    //   addUseCase: addUsecase,
+    //   findUseCase: findUseCase
+    // })
+
     const facade = ClientAdmFacadeFactory.create();
 
     const input = {
       id: "1",
-      name: "Client 1",
-      email: "client@xpto.com",
+      name: "Lucian",
+      email: "lucian@xpto.com",
       document: "1234-5678",
-      address: "Street 1",
+      address: new Address(
+        "Rua 123",
+        "99",
+        "Casa Verde",
+        "Criciúma",
+        "SC",
+        "88888-888"
+      ),
     };
 
     await facade.add(input);
@@ -68,6 +95,11 @@ describe("Client Adm Facade test", () => {
     expect(client.name).toBe(input.name);
     expect(client.email).toBe(input.email);
     expect(client.document).toBe(input.document);
-    expect(client.address).toBe(input.address);
+    expect(client.address.street).toBe(input.address.street);
+    expect(client.address.number).toBe(input.address.number);
+    expect(client.address.complement).toBe(input.address.complement);
+    expect(client.address.city).toBe(input.address.city);
+    expect(client.address.state).toBe(input.address.state);
+    expect(client.address.zipCode).toBe(input.address.zipCode);
   });
 });

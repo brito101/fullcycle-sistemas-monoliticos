@@ -1,9 +1,9 @@
 import { Sequelize } from "sequelize-typescript";
 import { ClientModel } from "./client.model";
+import ClientRepository from "./client.repository";
 import Client from "../domain/client.entity";
 import Id from "../../@shared/domain/value-object/id.value-object";
 import Address from "../../@shared/domain/value-object/address";
-import ClientRepository from "./client.repository";
 
 describe("Client Repository test", () => {
   let sequelize: Sequelize;
@@ -27,10 +27,17 @@ describe("Client Repository test", () => {
   it("should create a client", async () => {
     const client = new Client({
       id: new Id("1"),
-      name: "Client 1",
-      email: "client@teste.com",
+      name: "Lucian",
+      email: "lucian@teste.com",
       document: "1234-5678",
-      address: "Street 1",
+      address: new Address(
+        "Rua 123",
+        "99",
+        "Casa Verde",
+        "Criciúma",
+        "SC",
+        "88888-888"
+      ),
     });
 
     const repository = new ClientRepository();
@@ -43,7 +50,12 @@ describe("Client Repository test", () => {
     expect(clientDb.name).toEqual(client.name);
     expect(clientDb.email).toEqual(client.email);
     expect(clientDb.document).toEqual(client.document);
-    expect(clientDb.address).toEqual(client.address);
+    expect(clientDb.street).toEqual(client.address.street);
+    expect(clientDb.number).toEqual(client.address.number);
+    expect(clientDb.complement).toEqual(client.address.complement);
+    expect(clientDb.city).toEqual(client.address.city);
+    expect(clientDb.state).toEqual(client.address.state);
+    expect(clientDb.zipcode).toEqual(client.address.zipCode);
     expect(clientDb.createdAt).toStrictEqual(client.createdAt);
     expect(clientDb.updatedAt).toStrictEqual(client.updatedAt);
   });
@@ -51,10 +63,15 @@ describe("Client Repository test", () => {
   it("should find a client", async () => {
     const client = await ClientModel.create({
       id: "1",
-      name: "Client 1",
-      email: "client@teste.com",
+      name: "Lucian",
+      email: "lucian@123.com",
       document: "1234-5678",
-      address: "Street 1",
+      street: "Rua 123",
+      number: "99",
+      complement: "Casa Verde",
+      city: "Criciúma",
+      state: "SC",
+      zipcode: "88888-888",
       createdAt: new Date(),
       updatedAt: new Date(),
     });
@@ -65,7 +82,12 @@ describe("Client Repository test", () => {
     expect(result.id.id).toEqual(client.id);
     expect(result.name).toEqual(client.name);
     expect(result.email).toEqual(client.email);
-    expect(result.address).toEqual(client.address);    
+    expect(result.address.street).toEqual(client.street);
+    expect(result.address.number).toEqual(client.number);
+    expect(result.address.complement).toEqual(client.complement);
+    expect(result.address.city).toEqual(client.city);
+    expect(result.address.state).toEqual(client.state);
+    expect(result.address.zipCode).toEqual(client.zipcode);
     expect(result.createdAt).toStrictEqual(client.createdAt);
     expect(result.updatedAt).toStrictEqual(client.updatedAt);
   });
